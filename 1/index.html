@@ -1,0 +1,65 @@
+<html>
+<head>
+	<title>Hello World</title>
+	<link rel="stylesheet" type="text/css" href="./bootstrap.css">
+</head>
+<body ng-app="myApp">
+	<div class="container" ng-controller="StepperCtrl">
+		<h1>Hello World!</h1>
+		<p>Angular is awesome.</p>
+		<hr>
+		<div class="col-sm-4">
+			{{ model.number }}
+
+			<div stepper min="1" max="8"></div>
+			<div stepper min="1" max="8"></div>
+			<div stepper min="2" max="18"
+			></div>
+
+		</div><!-- /.col-lg-6 -->
+	</div>
+</body>
+<script type="text/javascript" src="./angular.min.js"></script>
+<script type="text/javascript">
+
+angular.module('myApp', [])
+.controller('StepperCtrl', ['$scope', function ($scope) {
+	$scope.model = {
+		number : 10
+	};
+}])
+.directive('stepper', [function () {
+	return {
+		restrict: 'A',
+		template: '<div class="input-group">' +
+				'<span class="input-group-btn">' +
+					'<button class="btn btn-default" type="button"' +
+				'		ng-click="minus()">-</button>'+
+				'</span>'+
+				'<input type="text" class="form-control"'+
+				'	ng-model="model.number">'+
+				'<span class="input-group-btn">'+
+				'	<button class="btn btn-default" type="button"'+
+				'		ng-click="add(model.number)">+</button>'+
+				'</span>' +
+				'</div>',
+		link: function (scope, iElement, iAttrs) {
+			console.log('min', iAttrs.min)
+			console.log('max', iAttrs.max)
+			scope.add = function (num) {
+				if ('number' !== typeof num ) num = parseInt( num );
+				scope.model.number = num  + 1;
+			};
+			scope.minus = function () {
+				scope.model.number -= 1;
+			};
+				
+		}
+	};
+}])
+
+</script>
+
+
+</html>
+
