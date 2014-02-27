@@ -4,18 +4,23 @@
 	<link rel="stylesheet" type="text/css" href="./bootstrap.css">
 </head>
 <body ng-app="myApp">
-	<div class="container" ng-controller="StepperCtrl">
+	<div class="container" ng-controller="StepperCtrl as stepperCtrl">
 		<h1>Hello World!</h1>
 		<p>Angular is awesome.</p>
 		<hr>
 		<div class="col-sm-4">
-			{{ model.number }}
 
-			<div stepper min="1" max="8"></div>
-			<div stepper min="1" max="8"></div>
-			<div stepper min="2" max="18"
-			></div>
+			座位數：{{ model.number }}
+			<div stepper num="model.number"></div>
 
+			行李數：{{ model.luggage }}
+			<div stepper num="model.luggage"></div>
+
+			成人： {{ adult }}
+			<div stepper num="adult"></div>
+
+			小孩： {{ stepperCtrl.child }}
+			<div stepper num="stepperCtrl.child"></div>
 		</div><!-- /.col-lg-6 -->
 	</div>
 </body>
@@ -23,37 +28,61 @@
 <script type="text/javascript">
 
 angular.module('myApp', [])
-.controller('StepperCtrl', ['$scope', function ($scope) {
-	$scope.model = {
-		number : 10
+.factory('Setting', [function () {
+	return {
+		max: 9,
+		min: 1
 	};
 }])
-.directive('stepper', [function () {
+.controller('StepperCtrl', ['$scope', function ($scope) {
+	$scope.model = {
+		number : 10,
+		luggage: 1,
+	};
+	$scope.adult = 1;
+	// $scope.child
+	this.child = 4;
+}])
+.directive('stepper', ['Setting', function (Setting) {
 	return {
 		restrict: 'A',
+		scope: {
+			num: '=',
+		},
 		template: '<div class="input-group">' +
 				'<span class="input-group-btn">' +
-					'<button class="btn btn-default" type="button"' +
-				'		ng-click="minus()">-</button>'+
+					'<button class="btn btn-primary" type="button"' +
+				'		ng-click="minus(num)">-</button>'+
 				'</span>'+
 				'<input type="text" class="form-control"'+
-				'	ng-model="model.number">'+
+				'	ng-model="num">'+
 				'<span class="input-group-btn">'+
-				'	<button class="btn btn-default" type="button"'+
-				'		ng-click="add(model.number)">+</button>'+
+				'	<button class="btn btn-primary" type="button"'+
+				'		ng-click="add(num)" ng-disabled="num >= setting.max">+</button>'+
 				'</span>' +
 				'</div>',
 		link: function (scope, iElement, iAttrs) {
-			console.log('min', iAttrs.min)
-			console.log('max', iAttrs.max)
+			console.log(Setting);
+
+			scope.setting = Setting;
+
 			scope.add = function (num) {
 				if ('number' !== typeof num ) num = parseInt( num );
-				scope.model.number = num  + 1;
+				if ("undefined" === typeof num) num = 1;
+				scope.num = num  + 1;
 			};
-			scope.minus = function () {
-				scope.model.number -= 1;
+			scope.minus = function (num) {
+				if ("undefined" === typeof num) num = 1;
+				scope.num = num -  1;
 			};
 				
+			scope.$watch('num', function (newVal, oldVal) {
+				console.log('new', newVal);
+				console.log('old', oldVal);
+				if (typeof newVal !== 'number') {
+					scope.num = oldVal;
+				}
+			});
 		}
 	};
 }])
