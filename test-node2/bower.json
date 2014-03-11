@@ -1,0 +1,23 @@
+{
+  "name": "test-node2",
+  "version": "0.0.1",
+  "homepage": "https://github.com/wuct/garage-class",
+  "authors": [
+    "wuct <wu.chingting@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.2.14",
+    "angular-resource": "~1.2.14",
+    "angular-animate": "~1.2.14"
+  }
+}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+    <link rel='stylesheet' href='/stylesheets/ngAnimate.css' />
+  </head>
+  <body ng-app="myApp" ng-controller="myCtrl">
+    <div class="container">
+      <h1>Hi <%= name %></h1>
+      <p>Welcome to <%= title %></p>
+      <p> Your school is {{ school }}</p>
+
+      <input type="text" ng-model="searchName">
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>_id</th>
+            <th>Phone</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="user in users | filter:searchName" class="toggle">
+            <td>{{user.name}}</td>
+            <td>{{user._id}}</td>
+            <td>{{user.phone}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script type="text/javascript" src="/bower_components/angular/angular.min.js"></script>
+    <script type="text/javascript" src="/bower_components/angular-resource/angular-resource.min.js"></script>
+    <script type="text/javascript" src="/bower_components/angular-animate/angular-animate.min.js"></script>
+    <script type="text/javascript">
+    	angular.module('myApp', ['ngResource', 'ngAnimate'])
+    	.controller('myCtrl', ['$scope', '$resource', function ($scope, $resource) {
+    		$scope.school = 'NTU';
+        var User = $resource('/api/user', { _id: 'aaa'}); // 創造 resource
+        $scope.users = User.query(); // query 是 ngResource 幫我們寫好的
+
+        // $scope.user = User.get({ _id: '123'}, function() {})
+    	}])
+    </script>
+  </body>
+</html>
